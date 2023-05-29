@@ -8,6 +8,25 @@ group = 'com.rerenan'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
+def prodProfiles='prod'
+def devProfiles='dev'
+def testProfiles='test'
+def propertyDrivenProfiles;
+ 
+if (project.hasProperty('prod')) {
+    propertyDrivenProfiles = prodProfiles
+ 
+} else if (project.hasProperty('dev')) {
+    propertyDrivenProfiles = devProfiles
+ 
+} else {
+    propertyDrivenProfiles = prodProfiles
+}
+println 'Using profile: "' + propertyDrivenProfiles + '" for ' + project.getName()
+
+bootRun {
+    jvmArgs = ["-Dspring.profiles.active=" + propertyDrivenProfiles]
+}
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
@@ -22,10 +41,11 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
+	implementation 'mysql:mysql-connector-java:8.0.33'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	implementation 'mysql:mysql-connector-java:8.0.33'
+	
 }
-
